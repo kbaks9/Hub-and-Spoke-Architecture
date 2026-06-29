@@ -19,10 +19,6 @@ variable "spoke2_vnet_name" {
   type = string
 }
 
-variable "hub_subnet_name" {
-  type = string
-}
-
 variable "spoke1_subnet_name" {
   type = string
 }

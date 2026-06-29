@@ -1,4 +1,4 @@
-# Hub VNet & Subnet
+# Hub VNet & associated subnets
 resource "azurerm_virtual_network" "hub_vnet" {
   name                = var.vnet_hub_name
   location            = var.location
@@ -7,11 +7,32 @@ resource "azurerm_virtual_network" "hub_vnet" {
   tags                = var.hub_tags
 }
 
-resource "azurerm_subnet" "hub_subnet" {
-  name                 = var.hub_subnet_name
+resource "azurerm_subnet" "firewall_subnet" {
+  name                 = var.firewall_subnet_name
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.hub_vnet.name
-  address_prefixes     = var.hub_address_prefixes
+  address_prefixes     = var.firewall_address_prefixes
+}
+
+resource "azurerm_subnet" "bastion_subnet" {
+  name                 = var.bastion_subnet_name
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.hub_vnet.name
+  address_prefixes     = var.bastion_address_prefixes
+}
+
+resource "azurerm_subnet" "gateway_subnet" {
+  name                 = var.gateway_subnet_name
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.hub_vnet.name
+  address_prefixes     = var.gateway_address_prefixes
+}
+
+resource "azurerm_subnet" "monitor_subnet" {
+  name                 = var.monitor_subnet_name
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.hub_vnet.name
+  address_prefixes     = var.monitor_address_prefixes
 }
 
 # Spoke 1 VNet & Subnet
@@ -44,32 +65,4 @@ resource "azurerm_subnet" "spoke2_subnet" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.spoke2_vnet.name
   address_prefixes     = var.spoke2_address_prefixes
-}
-
-resource "azurerm_subnet" "firewall_subnet" {
-  name                 = var.firewall_subnet_name
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.hub_vnet.name
-  address_prefixes     = var.firewall_address_prefixes
-}
-
-resource "azurerm_subnet" "bastion_subnet" {
-  name                 = var.bastion_subnet_name
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.hub_vnet.name
-  address_prefixes     = var.bastion_address_prefixes
-}
-
-resource "azurerm_subnet" "gateway_subnet" {
-  name                 = var.gateway_subnet_name
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.hub_vnet.name
-  address_prefixes     = var.gateway_address_prefixes
-}
-
-resource "azurerm_subnet" "monitor_subnet" {
-  name                 = var.monitor_subnet_name
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.hub_vnet.name
-  address_prefixes     = var.monitor_address_prefixes
 }
