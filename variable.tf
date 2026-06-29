@@ -20,10 +20,6 @@ variable "spoke2_vnet_name" {
   type = string
 }
 
-variable "hub_subnet_name" {
-  type = string
-}
-
 variable "spoke1_subnet_name" {
   type = string
 }
@@ -99,3 +95,29 @@ variable "firewall_subnet_name" {
 variable "monitor_subnet_name" {
   type = string
 }
+
+# NSG Module
+variable "nsg_spoke1_name" {
+  type = string
+}
+
+variable "nsg_spoke2_name" {
+  type = string
+}
+
+variable "nsg_gateway_name" {
+  type = string
+}
+
+variable "nsg_bastion_name" {
+  type = string
+}
+
+variable "nsg_firewall_name" {
+  type = string
+}
+
+variable "nsg_monitor_name" {
+  type = string
+}
+
