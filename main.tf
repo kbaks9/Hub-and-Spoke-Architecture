@@ -12,7 +12,6 @@ module "network" {
   spoke1_vnet_name = var.spoke1_vnet_name
   spoke2_vnet_name = var.spoke2_vnet_name
 
-  hub_subnet_name      = var.hub_subnet_name
   spoke1_subnet_name   = var.spoke1_subnet_name
   spoke2_subnet_name   = var.spoke2_subnet_name
   gateway_subnet_name  = var.gateway_subnet_name
@@ -35,4 +34,21 @@ module "network" {
   hub_address_space    = var.hub_address_space
   spoke1_address_space = var.spoke1_address_space
   spoke2_address_space = var.spoke2_address_space
+}
+
+module "nsg" {
+  source              = "./modules/nsg"
+  resource_group_name = azurerm_resource_group.rg-grp.name
+  location            = azurerm_resource_group.rg-grp.location
+
+  nsg_spoke1_name   = var.nsg_spoke1_name
+  nsg_spoke2_name   = var.nsg_spoke2_name
+  nsg_gateway_name  = var.nsg_gateway_name
+  nsg_bastion_name  = var.nsg_bastion_name
+  nsg_firewall_name = var.nsg_firewall_name
+  nsg_monitor_name  = var.nsg_monitor_name
+
+  hub_tags    = var.hub_tags
+  spoke1_tags = var.spoke1_tags
+  spoke2_tags = var.spoke2_tags
 }
