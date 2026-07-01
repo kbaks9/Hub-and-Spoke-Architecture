@@ -21,18 +21,11 @@ resource "azurerm_subnet" "bastion_subnet" {
   address_prefixes     = var.bastion_address_prefixes
 }
 
-resource "azurerm_subnet" "gateway_subnet" {
-  name                 = var.gateway_subnet_name
+resource "azurerm_subnet" "application_gateway_subnet" {
+  name                 = var.application_gateway_subnet_name
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.hub_vnet.name
-  address_prefixes     = var.gateway_address_prefixes
-}
-
-resource "azurerm_subnet" "monitor_subnet" {
-  name                 = var.monitor_subnet_name
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.hub_vnet.name
-  address_prefixes     = var.monitor_address_prefixes
+  address_prefixes     = var.application_gateway_address_prefixes
 }
 
 # Spoke 1 VNet & Subnet
