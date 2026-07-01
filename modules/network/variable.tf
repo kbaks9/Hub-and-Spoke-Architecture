@@ -51,7 +51,7 @@ variable "spoke2_address_prefixes" {
   type = list(string)
 }
 
-variable "gateway_address_prefixes" {
+variable "application_gateway_address_prefixes" {
   type = list(string)
 }
 
@@ -60,10 +60,6 @@ variable "bastion_address_prefixes" {
 }
 
 variable "firewall_address_prefixes" {
-  type = list(string)
-}
-
-variable "monitor_address_prefixes" {
   type = list(string)
 }
 
@@ -79,7 +75,7 @@ variable "spoke2_tags" {
   type = map(string)
 }
 
-variable "gateway_subnet_name" {
+variable "application_gateway_subnet_name" {
   type = string
 }
 
@@ -88,9 +84,5 @@ variable "bastion_subnet_name" {
 }
 
 variable "firewall_subnet_name" {
-  type = string
-}
-
-variable "monitor_subnet_name" {
   type = string
 }
