@@ -21,11 +21,17 @@ variable "nsg_spoke2_name" {
   type = string
 }
 
-variable "nsg_monitor_name" {
+# Security Rule Names
+### To be filled ###
+
+# Association Subnet Outputs
+variable "subnet_spoke1_id" {
   type = string
 }
 
-# Security Rule Names
+variable "subnet_spoke2_id" {
+  type = string
+}
 
 # Tags
 variable "hub_tags" {
