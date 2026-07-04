@@ -10,4 +10,5 @@ resource "azurerm_firewall" "firewall" {
     subnet_id            = var.firewall_subnet_id
     public_ip_address_id = var.firewall_public_ip_address_id
   }
+  tags = var.firewall_tags
 }
