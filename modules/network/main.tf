@@ -59,3 +59,33 @@ resource "azurerm_subnet" "spoke2_subnet" {
   virtual_network_name = azurerm_virtual_network.spoke2_vnet.name
   address_prefixes     = var.spoke2_address_prefixes
 }
+
+# VNet Peering #
+
+resource "azurerm_virtual_network_peering" "hub_spoke1_peer" {
+  name                      = var.hub_spoke1_peer_name
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.hub_vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.spoke1_vnet.id
+}
+
+resource "azurerm_virtual_network_peering" "hub2_spoke2_peer" {
+  name                      = var.hub_spoke2_peer_name
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.hub_vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.spoke2_vnet.id
+}
+
+resource "azurerm_virtual_network_peering" "spoke1_hub_peer" {
+  name                      = var.spoke1_hub_peer_name
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.spoke1_vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.hub_vnet.id
+}
+
+resource "azurerm_virtual_network_peering" "spoke2_hub_peer" {
+  name                      = var.spoke2_hub_peer_name
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.spoke2_vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.hub_vnet.id
+}

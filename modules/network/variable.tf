@@ -86,3 +86,19 @@ variable "bastion_subnet_name" {
 variable "firewall_subnet_name" {
   type = string
 }
+
+variable "hub_spoke1_peer_name" {
+  type = string
+}
+
+variable "hub_spoke2_peer_name" {
+  type = string
+}
+
+variable "spoke1_hub_peer_name" {
+  type = string
+}
+
+variable "spoke2_hub_peer_name" {
+  type = string
+}
