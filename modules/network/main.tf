@@ -67,6 +67,7 @@ resource "azurerm_virtual_network_peering" "hub_spoke1_peer" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.hub_vnet.name
   remote_virtual_network_id = azurerm_virtual_network.spoke1_vnet.id
+  allow_forwarded_traffic   = true
 }
 
 resource "azurerm_virtual_network_peering" "hub2_spoke2_peer" {
@@ -74,6 +75,7 @@ resource "azurerm_virtual_network_peering" "hub2_spoke2_peer" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.hub_vnet.name
   remote_virtual_network_id = azurerm_virtual_network.spoke2_vnet.id
+  allow_forwarded_traffic   = true
 }
 
 resource "azurerm_virtual_network_peering" "spoke1_hub_peer" {
@@ -81,6 +83,7 @@ resource "azurerm_virtual_network_peering" "spoke1_hub_peer" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.spoke1_vnet.name
   remote_virtual_network_id = azurerm_virtual_network.hub_vnet.id
+  allow_forwarded_traffic   = true
 }
 
 resource "azurerm_virtual_network_peering" "spoke2_hub_peer" {
@@ -88,4 +91,5 @@ resource "azurerm_virtual_network_peering" "spoke2_hub_peer" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.spoke2_vnet.name
   remote_virtual_network_id = azurerm_virtual_network.hub_vnet.id
+  allow_forwarded_traffic   = true
 }
