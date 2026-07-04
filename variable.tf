@@ -127,3 +127,12 @@ variable "nsg_firewall_name" {
   type = string
 }
 
+### Public-IP
+variable "public_ip_name" {
+  type = string
+}
+
+### Firewall
+variable "firewall_name" {
+  type = string
+}
