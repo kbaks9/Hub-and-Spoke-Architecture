@@ -18,6 +18,11 @@ module "network" {
   bastion_subnet_name             = var.bastion_subnet_name
   firewall_subnet_name            = var.firewall_subnet_name
 
+  hub_spoke1_peer_name = var.hub_spoke1_peer_name
+  hub_spoke2_peer_name = var.hub_spoke2_peer_name
+  spoke1_hub_peer_name = var.spoke1_hub_peer_name
+  spoke2_hub_peer_name = var.spoke2_hub_peer_name
+
   hub_tags    = var.hub_tags
   spoke1_tags = var.spoke1_tags
   spoke2_tags = var.spoke2_tags

@@ -88,6 +88,24 @@ variable "firewall_subnet_name" {
   type = string
 }
 
+variable "hub_spoke1_peer_name" {
+  type = string
+}
+
+variable "hub_spoke2_peer_name" {
+  type = string
+}
+
+variable "spoke1_hub_peer_name" {
+  type = string
+}
+
+variable "spoke2_hub_peer_name" {
+  type = string
+}
+
+# End of Network Module #
+
 # NSG Module
 variable "nsg_spoke1_name" {
   type = string
