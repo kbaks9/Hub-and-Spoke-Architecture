@@ -61,6 +61,7 @@ module "public-ip" {
   resource_group_name = azurerm_resource_group.rg-grp.name
   location            = azurerm_resource_group.rg-grp.location
   public_ip_name      = var.public_ip_name
+  pip_tags            = var.pip_tags
 }
 
 
@@ -71,4 +72,5 @@ module "firewall" {
   firewall_name                 = var.firewall_name
   firewall_subnet_id            = module.network.subnet_firewall_id
   firewall_public_ip_address_id = module.public-ip.public_ip_address_id
+  firewall_tags                 = var.firewall_tags
 }

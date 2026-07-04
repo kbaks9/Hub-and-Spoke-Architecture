@@ -132,7 +132,16 @@ variable "public_ip_name" {
   type = string
 }
 
+variable "pip_tags" {
+  type = map(string)
+}
+
 ### Firewall
 variable "firewall_name" {
   type = string
 }
+
+variable "firewall_tags" {
+  type = map(string)
+}
+
