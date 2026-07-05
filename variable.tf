@@ -145,3 +145,15 @@ variable "firewall_tags" {
   type = map(string)
 }
 
+### Route Table
+variable "rt_name" {
+  type = string
+}
+
+variable "rt_rule_name" {
+  type = string
+}
+
+variable "rt_tags" {
+  type = map(string)
+}

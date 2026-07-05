@@ -74,3 +74,15 @@ module "firewall" {
   firewall_public_ip_address_id = module.public-ip.public_ip_address_id
   firewall_tags                 = var.firewall_tags
 }
+
+module "route_tables" {
+  source                 = "./modules/route_tables"
+  resource_group_name    = azurerm_resource_group.rg-grp.name
+  location               = azurerm_resource_group.rg-grp.location
+  rt_name                = var.rt_name
+  rt_rule_name           = var.rt_rule_name
+  next_hop_in_ip_address = module.firewall.firewall_private_ip_address
+  rt_spoke1_subnet_id    = module.network.subnet_spoke1_id
+  rt_spoke2_subnet_id    = module.network.subnet_spoke2_id
+  rt_tags                = var.rt_tags
+}
