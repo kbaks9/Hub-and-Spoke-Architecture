@@ -22,8 +22,7 @@ resource "azurerm_subnet_network_security_group_association" "spoke2" {
   network_security_group_id = azurerm_network_security_group.nsg_spoke2.id
 }
 
-### Allow ###
-## Inbound ##
+# Allow-Inbound #
 # Spoke1 allows HTTPS from Application Gateway
 resource "azurerm_network_security_rule" "allow_inbound_appgw_https_spoke1" {
   name                        = "allow-https-from-appgw-spoke1"
@@ -42,7 +41,7 @@ resource "azurerm_network_security_rule" "allow_inbound_appgw_https_spoke1" {
 # Spoke1 allows SSH from Bastion
 resource "azurerm_network_security_rule" "allow_bastion_ssh_spoke1" {
   name                        = "allow-ssh-from-bastion-spoke1"
-  priority                    = 110
+  priority                    = 120
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
@@ -54,17 +53,17 @@ resource "azurerm_network_security_rule" "allow_bastion_ssh_spoke1" {
   network_security_group_name = azurerm_network_security_group.nsg_spoke1.name
 }
 
-## Deny ##
-resource "azurerm_network_security_rule" "deny_all_outbound_traffic_spoke1" {
-  name                        = "deny-all-outbound-traffic"
-  priority                    = 500
+# Allow-Outbound #
+resource "azurerm_network_security_rule" "allow_to_firewall_spoke1" {
+  name                        = "allow-to-firewall"
+  priority                    = 110
   direction                   = "Outbound"
-  access                      = "Deny"
+  access                      = "Allow"
   protocol                    = "*"
   source_port_range           = "*"
   destination_port_range      = "*"
   source_address_prefix       = "*"
-  destination_address_prefix  = "*"
+  destination_address_prefix  = "10.0.4.0/26" # Azure Firewall subnet
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.nsg_spoke1.name
 }
@@ -79,7 +78,7 @@ resource "azurerm_network_security_rule" "allow_appgw_https_spoke2" {
   access                      = "Allow"
   protocol                    = "Tcp"
   source_port_range           = "*"
-  destination_port_range      = "80"
+  destination_port_range      = "443"
   source_address_prefix       = "10.0.2.0/24" # App Gateway subnet
   destination_address_prefix  = "*"           # Spoke2 subnet (implicit)
   resource_group_name         = var.resource_group_name
@@ -101,18 +100,17 @@ resource "azurerm_network_security_rule" "allow_bastion_ssh_spoke2" {
   network_security_group_name = azurerm_network_security_group.nsg_spoke2.name
 }
 
-
-## Deny ##
-resource "azurerm_network_security_rule" "deny_all_outbound_traffic_spoke2" {
-  name                        = "deny-all-outbound-traffic"
-  priority                    = 500
+# Allow-Outbound #
+resource "azurerm_network_security_rule" "allow_to_firewall_spoke2" {
+  name                        = "allow-to-firewall"
+  priority                    = 110
   direction                   = "Outbound"
-  access                      = "Deny"
+  access                      = "Allow"
   protocol                    = "*"
   source_port_range           = "*"
   destination_port_range      = "*"
   source_address_prefix       = "*"
-  destination_address_prefix  = "*"
+  destination_address_prefix  = "10.0.4.0/26" # Azure Firewall subnet
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.nsg_spoke2.name
 }
