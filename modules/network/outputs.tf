@@ -9,3 +9,7 @@ output "subnet_spoke2_id" {
 output "subnet_firewall_id" {
   value = azurerm_subnet.firewall_subnet.id
 }
+
+output "subnet_bastion_id" {
+  value = azurerm_subnet.bastion_subnet.id
+}
