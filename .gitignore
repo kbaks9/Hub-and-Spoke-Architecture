@@ -11,4 +11,7 @@ terraform.tfvars
 
 *.tfplan
 
-.txt
+*.txt
+*.docx
+*.png
+*.jpg
