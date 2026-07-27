@@ -12,3 +12,43 @@ resource "azurerm_firewall" "firewall" {
   }
   tags = var.firewall_tags
 }
+
+resource "azurerm_firewall_application_rule_collection" "allow_http_https" {
+  name                = "allow-linux-updates"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+  priority            = 100
+  action              = "Allow"
+
+  rule {
+    name             = "Allow-http-https"
+    source_addresses = ["10.1.1.0/24"]
+    target_fqdns     = ["*"]
+
+    protocol {
+      type = "Http"
+      port = 80
+    }
+
+    protocol {
+      type = "Https"
+      port = 443
+    }
+  }
+}
+
+resource "azurerm_firewall_network_rule_collection" "dns" {
+  name                = "allow-dns"
+  priority            = 200
+  action              = "Allow"
+  azure_firewall_name = azurerm_firewall.firewall.name
+  resource_group_name = var.resource_group_name
+
+  rule {
+    name                  = "dns-outbound"
+    source_addresses      = ["10.1.1.0/24"]
+    destination_addresses = ["168.63.129.16"]
+    destination_ports     = ["53"]
+    protocols             = ["UDP", "TCP"]
+  }
+}
