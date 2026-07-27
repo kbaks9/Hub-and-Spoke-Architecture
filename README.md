@@ -1,1 +1,3 @@
-First commit.
+This project demonstrates the deployment of a secure, highly available Azure infrastructure using a Hub-and-Spoke network topology. The environment follows Azure networking and security best practices by centralizing shared services within a Hub Virtual Network while isolating workloads into separate Spoke Virtual Networks.
+
+The infrastructure is fully deployed using Terraform and is designed to showcase practical Azure administration, networking, security, and monitoring skills.

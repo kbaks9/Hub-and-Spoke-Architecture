@@ -43,18 +43,26 @@ module "nsg" {
   source              = "./modules/nsg"
   resource_group_name = azurerm_resource_group.rg-grp.name
   location            = azurerm_resource_group.rg-grp.location
-
-  nsg_spoke1_name = var.nsg_spoke1_name
-  nsg_spoke2_name = var.nsg_spoke2_name
-
-  subnet_spoke1_id = module.network.subnet_spoke1_id
-  subnet_spoke2_id = module.network.subnet_spoke2_id
-
-  hub_tags    = var.hub_tags
-  spoke1_tags = var.spoke1_tags
-  spoke2_tags = var.spoke2_tags
+  nsg_spoke1_name     = var.nsg_spoke1_name
+  nsg_spoke2_name     = var.nsg_spoke2_name
+  subnet_spoke1_id    = module.network.subnet_spoke1_id
+  subnet_spoke2_id    = module.network.subnet_spoke2_id
+  hub_tags            = var.hub_tags
+  spoke1_tags         = var.spoke1_tags
+  spoke2_tags         = var.spoke2_tags
 }
 
+module "compute" {
+  source              = "./modules/compute"
+  resource_group_name = azurerm_resource_group.rg-grp.name
+  location            = azurerm_resource_group.rg-grp.location
+  vm_subnet_id        = module.network.subnet_spoke1_id
+  depends_on = [
+    module.firewall,
+    module.route_tables,
+    module.nsg
+  ]
+}
 
 module "public-ip" {
   source              = "./modules/public-ip"
@@ -62,6 +70,16 @@ module "public-ip" {
   location            = azurerm_resource_group.rg-grp.location
   public_ip_name      = var.public_ip_name
   pip_tags            = var.pip_tags
+}
+
+module "bastion" {
+  source              = "./modules/bastion"
+  resource_group_name = azurerm_resource_group.rg-grp.name
+  location            = azurerm_resource_group.rg-grp.location
+  bastion_pip_name    = var.bastion_pip_name
+  bastion_host_name   = var.bastion_host_name
+  bastion_subnet_id   = module.network.subnet_bastion_id
+  # Still need to add pip tags
 }
 
 

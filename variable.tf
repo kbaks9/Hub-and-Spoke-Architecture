@@ -157,3 +157,12 @@ variable "rt_rule_name" {
 variable "rt_tags" {
   type = map(string)
 }
+
+# Bastion
+variable "bastion_pip_name" {
+  type = string
+}
+
+variable "bastion_host_name" {
+  type = string
+}
