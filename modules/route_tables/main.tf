@@ -18,8 +18,3 @@ resource "azurerm_subnet_route_table_association" "spoke1_assoc" {
   subnet_id      = var.rt_spoke1_subnet_id
   route_table_id = azurerm_route_table.spokes_rt.id
 }
-
-# resource "azurerm_subnet_route_table_association" "spoke2_assoc" {
-#   subnet_id      = var.rt_spoke2_subnet_id
-#   route_table_id = azurerm_route_table.spokes_rt.id
-# }
