@@ -16,15 +16,7 @@ variable "spoke1_vnet_name" {
   type = string
 }
 
-variable "spoke2_vnet_name" {
-  type = string
-}
-
 variable "spoke1_subnet_name" {
-  type = string
-}
-
-variable "spoke2_subnet_name" {
   type = string
 }
 
@@ -36,19 +28,11 @@ variable "spoke1_address_space" {
   type = list(string)
 }
 
-variable "spoke2_address_space" {
-  type = list(string)
-}
-
 variable "hub_address_prefixes" {
   type = list(string)
 }
 
 variable "spoke1_address_prefixes" {
-  type = list(string)
-}
-
-variable "spoke2_address_prefixes" {
   type = list(string)
 }
 
@@ -72,10 +56,6 @@ variable "spoke1_tags" {
   type = map(string)
 }
 
-variable "spoke2_tags" {
-  type = map(string)
-}
-
 variable "application_gateway_subnet_name" {
   type = string
 }
@@ -92,15 +72,7 @@ variable "hub_spoke1_peer_name" {
   type = string
 }
 
-variable "hub_spoke2_peer_name" {
-  type = string
-}
-
 variable "spoke1_hub_peer_name" {
-  type = string
-}
-
-variable "spoke2_hub_peer_name" {
   type = string
 }
 
@@ -108,10 +80,6 @@ variable "spoke2_hub_peer_name" {
 
 # NSG Module
 variable "nsg_spoke1_name" {
-  type = string
-}
-
-variable "nsg_spoke2_name" {
   type = string
 }
 
@@ -164,5 +132,19 @@ variable "bastion_pip_name" {
 }
 
 variable "bastion_host_name" {
+  type = string
+}
+
+# Storage
+variable "storage_account_name" {
+  type = string
+}
+
+variable "storage_tags" {
+  type = map(string)
+}
+
+# Monitor
+variable "log_analytics_name" {
   type = string
 }
