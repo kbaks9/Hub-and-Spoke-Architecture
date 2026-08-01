@@ -23,10 +23,6 @@ variable "rt_spoke1_subnet_id" {
   type = string
 }
 
-variable "rt_spoke2_subnet_id" {
-  type = string
-}
-
 variable "rt_tags" {
   type = map(string)
 }
