@@ -11,6 +11,12 @@ resource "azurerm_storage_account" "tfstate" {
   account_replication_type        = "ZRS"
   min_tls_version                 = "TLS1_2"
   allow_nested_items_to_be_public = false
+
+  blob_properties {
+    delete_retention_policy {
+      days = 7
+    }
+  }
 }
 
 resource "azurerm_storage_container" "tfstate" {
