@@ -83,18 +83,6 @@ variable "nsg_spoke1_name" {
   type = string
 }
 
-variable "nsg_application_gateway_name" {
-  type = string
-}
-
-variable "nsg_bastion_name" {
-  type = string
-}
-
-variable "nsg_firewall_name" {
-  type = string
-}
-
 ### Public-IP
 variable "public_ip_name" {
   type = string
@@ -106,6 +94,10 @@ variable "pip_tags" {
 
 ### Firewall
 variable "firewall_name" {
+  type = string
+}
+
+variable "firewall_policy_name" {
   type = string
 }
 

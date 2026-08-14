@@ -22,3 +22,7 @@ variable "firewall_public_ip_address_id" {
 variable "firewall_tags" {
   type = map(string)
 }
+
+variable "firewall_policy_name" {
+  type = string
+}

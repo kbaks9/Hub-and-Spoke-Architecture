@@ -4,6 +4,8 @@ resource "azurerm_firewall" "firewall" {
   resource_group_name = var.resource_group_name
   sku_name            = "AZFW_VNet"
   sku_tier            = "Standard"
+  threat_intel_mode   = "Deny"
+  firewall_policy_id  = azurerm_firewall_policy.policy.id
 
   ip_configuration {
     name                 = "configuration"
@@ -11,6 +13,12 @@ resource "azurerm_firewall" "firewall" {
     public_ip_address_id = var.firewall_public_ip_address_id
   }
   tags = var.firewall_tags
+}
+
+resource "azurerm_firewall_policy" "policy" {
+  name                = var.firewall_policy_name
+  resource_group_name = var.resource_group_name
+  location            = var.location
 }
 
 resource "azurerm_firewall_application_rule_collection" "allow_http_https" {

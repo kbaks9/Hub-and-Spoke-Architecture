@@ -1,12 +1,14 @@
 resource "azurerm_linux_virtual_machine_scale_set" "spoke1_vmss" {
-  name                = "spoke1-vmss"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  sku                 = "Standard_B1s"
-  instances           = 2
-  zones               = ["1", "2"]
-  admin_username      = "adminuser"
-  upgrade_mode        = "Automatic"
+  name                            = "spoke1-vmss"
+  location                        = var.location
+  resource_group_name             = var.resource_group_name
+  sku                             = "Standard_B1s"
+  instances                       = 2
+  zones                           = ["1", "2"]
+  admin_username                  = "adminuser"
+  disable_password_authentication = true
+  upgrade_mode                    = "Automatic"
+  encryption_at_host_enabled      = true
 
   admin_ssh_key {
     username   = "adminuser"

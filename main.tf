@@ -74,6 +74,7 @@ module "firewall" {
   firewall_subnet_id            = module.network.subnet_firewall_id
   firewall_public_ip_address_id = module.public-ip.public_ip_address_id
   firewall_tags                 = var.firewall_tags
+  firewall_policy_name          = var.firewall_policy_name
 }
 
 module "route_tables" {
