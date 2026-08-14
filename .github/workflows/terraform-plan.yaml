@@ -5,7 +5,8 @@ on:
     branches:
     - main
     paths:
-    - '**'
+    - 'modules/**'
+    - 'bootstrap/**'
 
 jobs:
   terraform_plan:
@@ -44,17 +45,15 @@ jobs:
           }
 
     - name: Terraform Init - Bootstrap
-      working-directory: terraform/bootstrap
+      working-directory: bootstrap
       run: terraform init
 
     - name: Terraform Plan - Bootstrap
-      working-directory: terraform/bootstrap
+      working-directory: bootstrap
       run: terraform plan
     
     - name: Terraform Init - Main
-      working-directory: terraform
       run: terraform init
 
     - name: Terraform Plan - Main
-      working-directory: terraform
       run: terraform plan
