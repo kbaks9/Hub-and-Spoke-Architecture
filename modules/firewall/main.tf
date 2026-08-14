@@ -19,6 +19,10 @@ resource "azurerm_firewall_policy" "policy" {
   name                = var.firewall_policy_name
   resource_group_name = var.resource_group_name
   location            = var.location
+
+  intrusion_detection {
+    mode = "Deny"
+  }
 }
 
 resource "azurerm_firewall_application_rule_collection" "allow_http_https" {
