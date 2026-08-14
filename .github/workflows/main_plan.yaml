@@ -9,7 +9,7 @@ on:
     - '*.tf'
 
 jobs:
-  terraform_plan:
+  main_plan:
     runs-on: ubuntu-latest
 
     steps:
