@@ -6,7 +6,7 @@ on:
     - main
     paths:
     - 'modules/**'
-    - 'bootstrap/**'
+    - '*.tf'
 
 jobs:
   terraform_plan:
@@ -48,17 +48,9 @@ jobs:
           "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
           "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
           }
-
-    - name: Terraform Init - Bootstrap
-      working-directory: bootstrap
-      run: terraform init
-
-    - name: Terraform Plan - Bootstrap
-      working-directory: bootstrap
-      run: terraform plan
     
     - name: Terraform Init - Main
-      run: terraform init
+      run: terraform init -backend=false
 
     - name: Terraform Plan - Main
       run: terraform plan
