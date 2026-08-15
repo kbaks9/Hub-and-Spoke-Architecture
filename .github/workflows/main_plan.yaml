@@ -1,4 +1,4 @@
-name: Main - Terraform plan
+name: Main - Plan
 
 on: 
   pull_request:
@@ -50,7 +50,7 @@ jobs:
           }
     
     - name: Terraform Init - Main
-      run: terraform init
+      run: terraform init -reconfigure
 
     - name: Terraform Plan - Main
       run: terraform plan

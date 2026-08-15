@@ -1,4 +1,4 @@
-name: Bootstrap - Terraform plan
+name: Bootstrap - Plan
 
 on: 
   pull_request:
