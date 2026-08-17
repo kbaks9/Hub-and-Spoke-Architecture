@@ -1,4 +1,4 @@
-name: Main - Terraform plan
+name: Main - Plan
 
 on: 
   pull_request:
@@ -9,7 +9,7 @@ on:
     - '*.tf'
 
 jobs:
-  terraform_plan:
+  main_plan:
     runs-on: ubuntu-latest
 
     steps:
@@ -50,7 +50,7 @@ jobs:
           }
     
     - name: Terraform Init - Main
-      run: terraform init -backend=false
+      run: terraform init -reconfigure
 
     - name: Terraform Plan - Main
-      run: terraform plan
+      run: terraform plan -out=tfplan
