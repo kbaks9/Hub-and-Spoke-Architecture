@@ -53,4 +53,4 @@ jobs:
       run: terraform init -reconfigure
 
     - name: Terraform Plan - Main
-      run: terraform plan
+      run: terraform plan -out=tfplan

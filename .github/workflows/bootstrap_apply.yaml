@@ -1,11 +1,7 @@
 name: Bootstrap - Apply
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'bootstrap/**'
+on: # Manual trigger [One time]
+  workflow_dispatch:
 
 jobs:
   bootstrap_apply:
