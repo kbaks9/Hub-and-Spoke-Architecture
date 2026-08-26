@@ -41,6 +41,7 @@ module "compute" {
   source              = "./modules/compute"
   resource_group_name = azurerm_resource_group.rg-grp.name
   location            = azurerm_resource_group.rg-grp.location
+  ssh_public_key      = var.ssh_public_key
   vm_subnet_id        = module.network.subnet_spoke1_id
   depends_on = [
     module.firewall,

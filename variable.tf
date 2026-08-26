@@ -140,3 +140,8 @@ variable "storage_tags" {
 variable "log_analytics_name" {
   type = string
 }
+
+variable "ssh_public_key" {
+  type      = string
+  sensitive = true
+}

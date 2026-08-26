@@ -12,7 +12,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "spoke1_vmss" {
 
   admin_ssh_key {
     username   = "adminuser"
-    public_key = file("~/.ssh/id_rsa.pub") # Just created it 05/07/26
+    public_key = var.ssh_public_key
+    #file("~/.ssh/id_rsa.pub") # Just created it 05/07/26
   }
 
   source_image_reference {
