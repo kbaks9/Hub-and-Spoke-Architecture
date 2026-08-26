@@ -1,6 +1,7 @@
 resource "azurerm_resource_group" "rg-grp" {
   name     = var.resource_group
   location = var.location
+  #Triggering main_plan.yaml pipeline
 }
 
 module "network" {
