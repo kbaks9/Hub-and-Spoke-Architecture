@@ -49,6 +49,11 @@ jobs:
           "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
           }
     
+    - name: Check Azure context
+      run: |
+        az account show --query "{subscription:id, name:name, tenantId:tenantId}" -o table
+        az group show --name rg-tfstate
+
     - name: Terraform Init - Main (TEST PR)
       run: terraform init
 
