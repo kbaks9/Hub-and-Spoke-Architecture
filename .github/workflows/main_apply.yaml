@@ -1,0 +1,50 @@
+name: Apply - Terraform
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'modules/**'
+      - '*.tf'
+
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        creds: |
+          {
+          "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+          "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+          "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
+          "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
+          }
+    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.12.2
+
+    - name: Where/Does Azure Storage Exists
+      run: |
+        az account show --query "{subscription:id, name:name, tenantId:tenantId}" -o table
+        az group show --name rg-tfstate
+
+    - name: Create Terraform variables
+      run: |
+        printf '%s\n' '${{ secrets.TFVARS }}' > terraform.tfvars
+
+    - name: Terraform Init - Main
+      run: terraform init -input=false
+
+    - name: Terraform Apply - Main
+      run: |
+          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+      run: terraform apply -input=false -var-file="terraform.tfvars" 
