@@ -72,7 +72,7 @@ resource "azurerm_monitor_metric_alert" "vmss_cpu" {
 
 resource "azurerm_monitor_metric_alert" "vmss_availability" {
   name                = "alert-vmss-availability"
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   scopes              = [var.vmss_target_id]
 
   description = "VMSS availability issue"
