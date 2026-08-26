@@ -55,7 +55,7 @@ jobs:
         az group show --name rg-tfstate
 
     - name: Terraform Init - Main (TEST PR)
-      run: terraform init
+      run: terraform init -input=false
 
     - name: Terraform Plan - Main (TEST PR)
-      run: terraform plan
+      run: terraform plan -input=false -var-file="terraform.tfvars"
