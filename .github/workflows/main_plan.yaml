@@ -49,8 +49,8 @@ jobs:
           "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
           }
     
-    - name: Terraform Init - Main
+    - name: Terraform Init - Main (TEST PR)
       run: terraform init
 
-    - name: Terraform Plan - Main
+    - name: Terraform Plan - Main (TEST PR)
       run: terraform plan
