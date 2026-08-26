@@ -38,7 +38,7 @@ resource "azurerm_monitor_diagnostic_setting" "firewall" {
 resource "azurerm_monitor_action_group" "ag_vmss" {
   name                = "ag-vmss-alerts"
   resource_group_name = var.resource_group_name
-  short_name          = "vmss-platform"
+  short_name          = "vmss-plt"
 
   email_receiver {
     name          = "vmss-alerts"
