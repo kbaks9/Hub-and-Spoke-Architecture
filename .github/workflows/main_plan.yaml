@@ -1,4 +1,4 @@
-name: Main - Terraform plan
+name: Plan - Terraform
 
 on: 
   pull_request:
