@@ -45,6 +45,6 @@ jobs:
       run: terraform init -input=false
 
     - name: Terraform Apply - Main
-      run: |
-          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
-      run: terraform apply -input=false -var-file="terraform.tfvars" 
+      env:
+        TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+      run: terraform apply -input=false -var-file="terraform.tfvars"
