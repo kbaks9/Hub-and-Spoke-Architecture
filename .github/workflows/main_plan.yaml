@@ -58,10 +58,10 @@ jobs:
       run: |
         printf '%s\n' '${{ secrets.TFVARS }}' > terraform.tfvars
 
-    - name: Terraform Init - Main (TEST PR)
+    - name: Terraform Init - Main
       run: terraform init -input=false
 
-    - name: Terraform Plan - Main (TEST PR)
+    - name: Terraform Plan - Main
       env:
         TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
       run: terraform plan -input=false -var-file="terraform.tfvars"
