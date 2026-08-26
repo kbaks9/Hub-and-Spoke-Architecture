@@ -49,7 +49,7 @@ module "compute" {
     module.nsg
   ]
 }
-#test run
+#test run 2
 
 module "public-ip" {
   source              = "./modules/public-ip"
