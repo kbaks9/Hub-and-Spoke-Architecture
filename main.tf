@@ -49,6 +49,7 @@ module "compute" {
     module.nsg
   ]
 }
+#test run
 
 module "public-ip" {
   source              = "./modules/public-ip"
