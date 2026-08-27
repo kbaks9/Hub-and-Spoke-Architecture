@@ -25,9 +25,16 @@ resource "azurerm_monitor_diagnostic_setting" "firewall" {
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.id
   log_analytics_destination_type = "Dedicated"
 
+  enabled_log {
+    category = "AzureFirewallApplicationRule"
+  }
 
   enabled_log {
-    category_group = "allLogs"
+    category = "AzureFirewallNetworkRule"
+  }
+
+  enabled_log {
+    category = "AzureFirewallDnsProxy"
   }
 
   enabled_metric {
