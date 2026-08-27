@@ -19,6 +19,8 @@ resource "azurerm_subnet" "bastion_subnet" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.hub_vnet.name
   address_prefixes     = var.bastion_address_prefixes
+
+  depends_on = [azurerm_subnet.firewall_subnet]
 }
 
 resource "azurerm_subnet" "application_gateway_subnet" {
@@ -26,6 +28,8 @@ resource "azurerm_subnet" "application_gateway_subnet" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.hub_vnet.name
   address_prefixes     = var.application_gateway_address_prefixes
+
+  depends_on = [azurerm_subnet.bastion_subnet]
 }
 
 # Spoke 1 VNet & Subnet
