@@ -77,26 +77,26 @@ resource "azurerm_monitor_metric_alert" "vmss_cpu" {
   }
 }
 
-resource "azurerm_monitor_metric_alert" "vmss_availability" {
-  name                = "alert-vmss-availability"
-  resource_group_name = var.resource_group_name
-  scopes              = [var.vmss_target_id]
+# resource "azurerm_monitor_metric_alert" "vmss_availability" {
+#   name                = "alert-vmss-availability"
+#   resource_group_name = var.resource_group_name
+#   scopes              = [var.vmss_target_id]
 
-  description = "VMSS availability issue"
-  severity    = 1
+#   description = "VMSS availability issue"
+#   severity    = 1
 
-  criteria {
-    metric_namespace = "Microsoft.Compute/virtualMachineScaleSets"
-    metric_name      = "Available VM Instances"
-    aggregation      = "Average"
-    operator         = "LessThan"
-    threshold        = 2
-  }
+#   criteria {
+#     metric_namespace = "Microsoft.Compute/virtualMachineScaleSets"
+#     metric_name      = "Available VM Instances"
+#     aggregation      = "Average"
+#     operator         = "LessThan"
+#     threshold        = 2
+#   }
 
-  window_size = "PT5M"
-  frequency   = "PT1M"
+#   window_size = "PT5M"
+#   frequency   = "PT1M"
 
-  action {
-    action_group_id = azurerm_monitor_action_group.ag_vmss.id
-  }
-}
+#   action {
+#     action_group_id = azurerm_monitor_action_group.ag_vmss.id
+#   }
+# }
