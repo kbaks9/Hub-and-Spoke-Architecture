@@ -8,7 +8,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "spoke1_vmss" {
   admin_username                  = "adminuser"
   disable_password_authentication = true
   upgrade_mode                    = "Automatic"
-  encryption_at_host_enabled      = true
+  encryption_at_host_enabled      = false
 
   admin_ssh_key {
     username   = "adminuser"
