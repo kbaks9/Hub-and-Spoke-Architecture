@@ -1,15 +1,23 @@
-#!/bin/bash
-set -e
+# #!/bin/bash
+# set -e
 
-until curl -Is http://azure.archive.ubuntu.com >/dev/null 2>&1; do
-    echo "Waiting for outbound connectivity..."
-    sleep 5
-done
+# max_attempts=12   # 12 * 5s = 60s max wait
+# attempt=0
 
-apt-get update
-apt-get install -y apache2
+# until curl -Is http://azure.archive.ubuntu.com >/dev/null 2>&1; do
+#     attempt=$((attempt + 1))
+#     if [ "$attempt" -ge "$max_attempts" ]; then
+#         echo "ERROR: No outbound connectivity after $((max_attempts * 5)) seconds. Exiting."
+#         exit 1
+#     fi
+#     echo "Waiting for outbound connectivity... (attempt $attempt/$max_attempts)"
+#     sleep 5
+# done
 
-systemctl enable apache2
-systemctl start apache2
+# apt-get update
+# apt-get install -y apache2
 
-echo "<h1>Hello from $(hostname)</h1>" > /var/www/html/index.html
+# systemctl enable apache2
+# systemctl start apache2
+
+# echo "<h1>Hello from $(hostname)</h1>" > /var/www/html/index.html
