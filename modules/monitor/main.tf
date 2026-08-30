@@ -6,41 +6,41 @@ resource "azurerm_log_analytics_workspace" "workspace" {
   retention_in_days   = 30
 }
 
-resource "azurerm_monitor_diagnostic_setting" "vmss" {
-  name                           = "vmss-platform-monitoring"
-  target_resource_id             = var.vmss_target_id
-  storage_account_id             = var.storage_account_id
-  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.id
-  log_analytics_destination_type = "Dedicated"
+# resource "azurerm_monitor_diagnostic_setting" "vmss" {
+#   name                           = "vmss-platform-monitoring"
+#   target_resource_id             = var.vmss_target_id
+#   storage_account_id             = var.storage_account_id
+#   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.id
+#   log_analytics_destination_type = "Dedicated"
 
-  enabled_metric {
-    category = "AllMetrics"
-  }
-}
+#   enabled_metric {
+#     category = "AllMetrics"
+#   }
+# }
 
-resource "azurerm_monitor_diagnostic_setting" "firewall" {
-  name                           = "firewall-platform-monitoring"
-  target_resource_id             = var.firewall_target_id
-  storage_account_id             = var.storage_account_id
-  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.id
-  log_analytics_destination_type = "Dedicated"
+# resource "azurerm_monitor_diagnostic_setting" "firewall" {
+#   name                           = "firewall-platform-monitoring"
+#   target_resource_id             = var.firewall_target_id
+#   storage_account_id             = var.storage_account_id
+#   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.id
+#   log_analytics_destination_type = "Dedicated"
 
-  enabled_log {
-    category = "AzureFirewallApplicationRule"
-  }
+#   enabled_log {
+#     category = "AzureFirewallApplicationRule"
+#   }
 
-  enabled_log {
-    category = "AzureFirewallNetworkRule"
-  }
+#   enabled_log {
+#     category = "AzureFirewallNetworkRule"
+#   }
 
-  enabled_log {
-    category = "AzureFirewallDnsProxy"
-  }
+#   enabled_log {
+#     category = "AzureFirewallDnsProxy"
+#   }
 
-  enabled_metric {
-    category = "AllMetrics"
-  }
-}
+#   enabled_metric {
+#     category = "AllMetrics"
+#   }
+# }
 
 resource "azurerm_monitor_action_group" "ag_vmss" {
   name                = "ag-vmss-alerts"
