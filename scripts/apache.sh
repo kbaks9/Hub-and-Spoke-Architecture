@@ -21,3 +21,14 @@
 # systemctl start apache2
 
 # echo "<h1>Hello from $(hostname)</h1>" > /var/www/html/index.html
+
+{
+  echo "=== DNS test ==="
+  nslookup azure.archive.ubuntu.com
+
+  echo "=== Route table ==="
+  ip route
+
+  echo "=== Curl test (15s timeout) ==="
+  curl -v --max-time 15 http://azure.archive.ubuntu.com
+} > /tmp/network-test.log 2>&1
