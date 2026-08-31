@@ -22,6 +22,7 @@
 
 # echo "<h1>Hello from $(hostname)</h1>" > /var/www/html/index.html
 
+#!/bin/bash
 {
   echo "=== DNS test ==="
   nslookup azure.archive.ubuntu.com
