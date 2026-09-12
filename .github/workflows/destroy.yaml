@@ -35,5 +35,8 @@ jobs:
         run: terraform init -input=false
 
       - name: Terraform Destroy
+        env:
+        TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
         working-directory: .
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve -input=false -var-file="terraform.tfvars"
+        
