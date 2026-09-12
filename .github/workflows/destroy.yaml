@@ -34,9 +34,13 @@ jobs:
       - name: Terraform Init - Main
         run: terraform init -input=false
 
-      - name: Terraform Destroy
+      - name: Destroy Bootstrap resources
+        working-directory: bootstrap/.
+        run: terraform destroy -auto-approve
+
+      - name: Destroy main infrastructure
         env:
           TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
         working-directory: .
-        run: terraform destroy -auto-approve -input=false -var-file="terraform.tfvars"
+        run: terraform destroy -auto-approve
         
