@@ -45,9 +45,9 @@ jobs:
         working-directory: ./bootstrap/
         run: terraform init -upgrade
 
-      - name: Check Bootstrap State
-        working-directory: ./bootstrap/
-        run: terraform state list
+      # - name: Check Bootstrap State
+      #   working-directory: ./bootstrap/
+      #   run: terraform state list
 
       - name: Destroy Bootstrap resources
         working-directory: ./bootstrap/
