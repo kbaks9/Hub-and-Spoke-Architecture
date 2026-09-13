@@ -42,9 +42,13 @@ jobs:
         run: terraform destroy -auto-approve -input=false
 
       - name: Bootstrap Init
-        working-directory: bootstrap
+        working-directory: ./bootstrap/
         run: terraform init -upgrade
 
+      - name: Check Bootstrap State
+        working-directory: ./bootstrap/
+        run: terraform state list
+
       - name: Destroy Bootstrap resources
-        working-directory: bootstrap
+        working-directory: ./bootstrap/
         run: terraform destroy -auto-approve
