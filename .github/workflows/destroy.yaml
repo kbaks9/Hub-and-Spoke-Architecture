@@ -42,13 +42,21 @@ jobs:
         run: terraform destroy -auto-approve -input=false
 
       - name: Bootstrap Init
-        working-directory: ./bootstrap/
+        working-directory: ./bootstrap
         run: terraform init -upgrade
 
-      - name: Check Bootstrap State
-        working-directory: ./bootstrap/
-        run: terraform state list
+      - name: Import Bootstrap Resource Group
+        working-directory: ./bootstrap
+        run: terraform import azurerm_resource_group.tfstate "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-tfstate"
 
-      - name: Destroy Bootstrap resources
-        working-directory: ./bootstrap/
-        run: terraform destroy -auto-approve
+      - name: Import Bootstrap Storage Account
+        working-directory: ./bootstrap
+        run: terraform import azurerm_storage_account.tfstate "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/rg-tfstate/providers/Microsoft.Storage/storageAccounts/storage9972007"
+
+      - name: Import Bootstrap Storage Container
+        working-directory: ./bootstrap
+        run: terraform import azurerm_storage_container.tfstate "https://storage9972007.blob.core.windows.net/tfstate"
+
+      - name: Destroy Bootstrap
+        working-directory: ./bootstrap
+        run: terraform destroy -auto-approve -input=false
