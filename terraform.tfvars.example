@@ -1,0 +1,95 @@
+### Resource group ###
+resource_group = ""
+location       = ""
+
+### Tags ###
+hub_tags = {
+  environment = "prod"
+  role        = "hub"
+  workload    = "shared-services"
+  project     = "hub-spoke"
+}
+
+spoke1_tags = {
+  environment = "prod"
+  role        = "spoke1"
+  workload    = "web-vm"
+  project     = "hub-spoke"
+}
+
+pip_tags = {
+  environment = "prod"
+  role        = "spoke"
+  workload    = "public-ip"
+  project     = "hub-spoke"
+}
+
+firewall_tags = {
+  environment = "prod"
+  role        = "spoke"
+  workload    = "firewall"
+  project     = "hub-spoke"
+}
+
+rt_tags = {
+  environment = "prod"
+  role        = "spoke"
+  workload    = "udr"
+  project     = "hub-spoke"
+}
+
+storage_tags = {
+  environment = "prod"
+  role        = "spoke"
+  workload    = "storage-account"
+  project     = "hub-spoke"
+}
+
+### Network Module Configurations ###
+vnet_hub_name    = ""
+spoke1_vnet_name = ""
+
+spoke1_subnet_name = ""
+
+application_gateway_subnet_name = ""
+bastion_subnet_name             = ""
+firewall_subnet_name            = ""
+
+hub_address_space    = [""]
+spoke1_address_space = [""]
+
+hub_spoke1_peer_name = ""
+spoke1_hub_peer_name = ""
+
+hub_address_prefixes                 = [""] #within VNet Hub, different 3rd octog#
+application_gateway_address_prefixes = [""] #within VNet Hub, different 3rd octog#
+bastion_address_prefixes             = [""] #Minimum recommended
+firewall_address_prefixes            = [""] #Minimum recommended
+
+spoke1_address_prefixes = [""] #within VNet Spoke1#
+
+### NSG Module Configurations ###
+nsg_spoke1_name = ""
+
+### Public IP Module Configurations ###
+public_ip_name = ""
+
+# Firewall Module Configurations ###
+firewall_name        = ""
+firewall_policy_name = ""
+
+
+# Route Table Module Configurations ###
+rt_name      = ""
+rt_rule_name = ""
+
+# Bastion Module Configurations #
+bastion_pip_name  = ""
+bastion_host_name = ""
+
+# Storage Module Configurations #
+storage_account_name = ""
+
+# Monitor Module Configurations # 
+log_analytics_name = ""
+
