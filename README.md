@@ -1,178 +1,181 @@
-# Azure Hub & Spoke Architecture - Terraform
+# Hub-and-Spoke-Architecture
 
-## Project Goal
-Build a production-style Azure Hub & Spoke Architecture using Terraform.
+This project is an Azure network architecture designed to demonstrate my understanding of enterprise networking and cloud security principles. It uses a Hub-and-Spoke topology, with a central hub responsible for controlling and securing traffic to and from the spoke networks. The environment is managed as Infrastructure as Code and deployed through an automated CI/CD workflow.
 
-## Implementation Checklist
+The infrastructure is provisioned entirely with Terraform and deployed to Azure using GitHub Actions. Outbound traffic is routed through Azure Firewall for centralised inspection, while Azure Bastion provides secure administrative access to virtual machines without exposing public IP addresses on the compute resources.
 
-### Phase 0 - Terraform Bootstrap & Remote State ✅
+![Architecture diagram](images/architectural_diagram.png)
 
-- [x] Create Terraform bootstrap project
-- [x] Create Terraform state Resource Group (`rg-tfstate`)
-- [x] Create Terraform state Storage Account (`storage9972007`)
-- [x] Create Terraform state Blob Container (`tfstate`)
-- [x] Configure AzureRM remote backend
-- [x] Store Terraform state remotely in Azure Blob Storage
-- [x] Separate Terraform state storage from application resources
+The spoke VM Scale Set does not have a public IP address. Inbound traffic is handled through an Internal Load Balancer within the compute module, while outbound traffic is routed through a Route Table to Azure Firewall for inspection before reaching the internet.
 
-Remote State:
+Administrative access is provided exclusively through Azure Bastion using SSH keys. This keeps the VM Scale Set isolated from direct internet access and avoids exposing public IP addresses on the compute resources.
 
+## Tech Stack
+
+| Category | Technology |
+|---|---|
+| Compute | Linux VM Scale Set (`Standard_B1s`, Ubuntu 22.04 LTS), 2 instances across zones 1 & 2, `Automatic` upgrade mode |
+| Networking | Hub-and-Spoke VNets, VNet Peering (bidirectional, forwarded traffic allowed), NSGs, UDRs |
+| Perimeter security | Azure Firewall (`AZFW_VNet`, Standard tier, threat intel mode `Deny`) |
+| Access | Azure Bastion (Standard SKU, no public IPs on VMSS) |
+| Load balancing | Internal Load Balancer (Standard SKU, TCP health probe on port 80) |
+| Monitoring | Log Analytics Workspace, Action Group, VMSS CPU alert |
+| Infrastructure as Code | Terraform |
+| CI/CD | GitHub Actions |
+| Security scanning | Checkov, TFLint |
+| State backend | Azure Blob Storage (ZRS, TLS 1.2, private, 7-day blob soft delete) |
+
+## Project Structure
+
+```
+Hub-and-Spoke-Architecture/
+├── .github/
+│   └── workflows/
+│       ├── bootstrap.yaml         # Checkov, TFLint, plan and apply of the state backend (manual)
+│       ├── main_plan.yaml         # Checkov, TFLint, init and plan (runs on PR to main)
+│       ├── main_apply.yaml        # init and apply (runs on push to main)
+│       └── destroy.yaml           # tears down all resources (manual trigger)
+├── bootstrap/
+│   ├── main.tf
+│   ├── provider.tf
+│   └── variables.tf
+├── modules/
+│   ├── bastion/           # Bastion host + its own public IP
+│   ├── compute/           # VMSS + Internal Load Balancer + Custom Script Extension
+│   ├── firewall/          # Azure Firewall + firewall policy + rule collections
+│   ├── monitor/           # Log Analytics, Action Group, metric alerts
+│   ├── network/           # Hub/Spoke VNets, subnets, peering
+│   ├── nsg/                # NSG + security rules for the spoke subnet
+│   ├── public-ip/         # Public IP for Azure Firewall
+│   ├── route_tables/      # UDR forcing spoke egress through the Firewall
+│   └── storage/           # Storage account used for Terraform remote state
+├── scripts/
+│   └── apache.sh
+├── backend.tf
+├── main.tf
+├── outputs.tf
+├── provider.tf
+├── variables.tf
+├── terraform.tfvars
+├── terraform.tfvars.example
+└── README.md
+```
+
+## Pipelines
+
+| Pipeline | Trigger | What it does |
+|---|---|---|
+| `bootstrap` | Manual | Checkov and TFLint scan, then plans and applies the Terraform state backend (`rg-tfstate`, storage account, `tfstate` container) |
+| `main_plan` | PR to main (`modules/**`, `*.tf`) | Checkov and TFLint scan, `terraform init`, `terraform plan` |
+| `main_apply` | Push to main (`modules/**`, `*.tf`, `scripts/apache.sh`) | `terraform init`, `terraform apply -auto-approve` |
+| `destroy` | Manual | Tears down all resources |
+
+### Terraform plan
+![terraform-plan](images/terraform_plan.png)
+
+### Terraform apply
+![terraform-apply](images/terraform_apply.png)
+
+### Terraform destroy
+![terraform-destroy](images/terraform_destroy.png)
+
+## Networking
+
+The environment uses a Hub-and-Spoke design. The hub contains Azure Firewall and Bastion, while the spoke hosts the VM Scale Set. Traffic between the networks is controlled through VNet peering and routing.
+
+## Security
+
+Outbound spoke traffic is routed through Azure Firewall, with rules allowing required HTTP, HTTPS and DNS traffic. NSGs provide additional subnet-level controls, while Azure Bastion is used for administrative access without exposing public IPs on the VMSS.
+
+Terraform state storage is secured with TLS 1.2, public blob access disabled and soft delete enabled. Checkov and TFLint are also used in the CI/CD pipeline to identify security and configuration issues.
+
+## Monitoring
+
+A Log Analytics Workspace and email Action Group are deployed for monitoring. The current alert monitors VMSS CPU usage above 80%.
+
+> **Known gap:** Host encryption is not currently enabled on the VMSS.
+
+## Remote State
+
+Defined in `backend.tf`:
+
+- Resource Group: `rg-tfstate`
 - Storage Account: `storage9972007`
 - Container: `tfstate`
-- State File: `prod.tfstate`
+- State File: `dev.tfstate`
 
----
+## Azure Resources
 
-### Phase 1 - Core Networking ✅
+| Resource | Type | Purpose |
+|---|---|---|
+| Hub VNet | Virtual Network | Hosts Firewall, Bastion, and reserved App Gateway subnets |
+| Spoke VNet | Virtual Network | Hosts the VMSS |
+| Azure Firewall | Firewall | Centralised outbound traffic control |
+| Public IP (Firewall) | Public IP | Standard SKU, static allocation, attached to Azure Firewall |
+| Azure Bastion | Bastion Host | SSH access with no public IPs on VMSS |
+| Public IP (Bastion) | Public IP | Standard SKU, static allocation, attached to Azure Bastion |
+| VM Scale Set | Compute | Runs Apache across 2 instances, zones 1 & 2 |
+| Internal Load Balancer | Load Balancer | Distributes traffic to the VMSS backend pool |
+| Route Table | Routing | Forces spoke egress through Azure Firewall |
+| Storage Account | Storage | Terraform remote state backend (ZRS, private, TLS 1.2) |
+| Log Analytics Workspace | Monitoring | Centralised logs and metrics |
+| Action Group + CPU Alert | Monitoring | Email notification on VMSS CPU > 80% |
 
-- [x] Create Resource Group
-- [x] Create Hub Virtual Network
-- [x] Create Azure Firewall subnet
-- [x] Create Azure Bastion subnet
-- [x] Create Spoke Virtual Network
-- [x] Create Web subnet
-- [x] Configure Hub to Spoke VNet peering
-- [x] Configure Spoke to Hub VNet peering
-- [x] Create Network Security Groups
-- [x] Configure NSG security rules
+### Resource group overview
+![Azure resource group](images/resource-group-overview.png)
 
----
+### VNet peering / topology
+![VNet peering](images/vnet-peering.png)
 
-### Phase 2 - Compute ✅
+### VM Scale Set overview
+![VMSS overview](images/vmss-overview.png)
 
-- [x] Deploy Linux Virtual Machine Scale Set
-- [x] Configure Ubuntu 22.04 LTS
-- [x] Deploy 2 VM instances
-- [x] Enable Availability Zones
-- [x] Configure automatic upgrade mode
-- [x] Configure SSH authentication
-- [x] Deploy Custom Script Extension
-- [x] Install Apache2
-- [x] Validate VMSS deployment
-- [x] Validate SSH access through Bastion
-- [x] Validate Apache response
+### Internal Load Balancer
+![Internal Load Balancer](images/internal-load-balancer.png)
 
----
+### Log Analytics metrics
+![Log Analytics metrics](images/log-analytics-metrics.png)
 
-### Phase 3 - Azure Firewall ✅
+### Alert rules
+![Alert rules](images/alert-rules.png)
 
-- [x] Deploy Firewall Public IP
-- [x] Configure Standard SKU
-- [x] Configure Static allocation
-- [x] Deploy Azure Firewall
-- [x] Configure Firewall private IP (`10.0.4.4`)
-- [x] Configure HTTP outbound rule
-- [x] Configure HTTPS outbound rule
-- [x] Configure DNS TCP rule
-- [x] Configure DNS UDP rule
-- [x] Validate outbound traffic through Firewall
+## Deploying the Infrastructure
 
----
+Bootstrap the Terraform state backend first (one-time, manual):
 
-### Phase 4 - Route Traffic ✅
+```bash
+cd bootstrap
+terraform init
+terraform apply
+```
 
-- [x] Deploy Route Table (`rt-spokes`)
-- [x] Configure default route (`0.0.0.0/0`)
-- [x] Route traffic through Azure Firewall
-- [x] Associate Route Table with Web subnet
-- [x] Validate VMSS outbound traffic flow
+Then deploy the main infrastructure — automatically via GitHub Actions (plan on PR, apply on push to main), or manually from the repo root. Copy `terraform.tfvars.example` to `terraform.tfvars` and fill in your values first:
 
-Traffic Flow:
+```bash
+cp terraform.tfvars.example terraform.tfvars
+terraform init
+TF_VAR_ssh_public_key="$(cat ~/.ssh/id_rsa.pub)" terraform apply -var-file="terraform.tfvars"
+```
 
-VMSS → Route Table → Azure Firewall → Internet
+To destroy:
 
----
+```bash
+terraform destroy
+```
 
-### Phase 5 - Azure Bastion ✅
+The Terraform state storage (`rg-tfstate`) is managed separately by the bootstrap pipeline and is not affected by this command.
 
-- [x] Deploy Azure Bastion
-- [x] Deploy Bastion Public IP
-- [x] Confirm VMSS has private IP only
-- [x] Confirm no VMSS public IP exposure
-- [x] Validate SSH access through Bastion
+## Required GitHub Secrets
 
----
+| Secret | Description |
+|---|---|
+| `AZURE_CLIENT_ID` | Service principal client ID |
+| `AZURE_CLIENT_SECRET` | Service principal client secret |
+| `AZURE_SUBSCRIPTION_ID` | Azure subscription ID |
+| `AZURE_TENANT_ID` | Azure tenant ID |
+| `TFVARS` | Full contents of `terraform.tfvars`, written to file at pipeline runtime |
+| `SSH_PUBLIC_KEY` | Public key injected into the VMSS for Bastion SSH access (passed as `TF_VAR_ssh_public_key`) |
 
-### Phase 6 - Internal Load Balancer ✅
+## Author
 
-- [x] Deploy Internal Azure Load Balancer
-- [x] Configure frontend private IP (`10.1.1.4`)
-- [x] Create VMSS backend pool
-- [x] Configure TCP health probe
-- [x] Configure port 80 health check
-- [x] Configure load balancing rule
-- [x] Validate backend VMSS instances
-- [x] Validate Apache through Load Balancer
-
----
-
-### Phase 7 - High Availability ✅
-
-- [x] Deploy highly available VMSS architecture
-- [x] Configure two VM instances
-- [x] Enable Availability Zones
-- [x] Configure automatic instance management
-- [x] Validate application availability
-
-Architecture:
-
-Internal Load Balancer → VM Scale Set → VM Instances
-
----
-
-### Phase 8 - Monitoring ✅
-
-- [x] Deploy Log Analytics Workspace
-- [x] Configure retention period
-- [x] Configure Azure Monitor Diagnostic Settings
-- [x] Enable Firewall monitoring
-- [x] Enable VMSS monitoring
-- [x] Validate Firewall metrics
-- [x] Validate VM metrics
-
-Validated:
-
-- [x] FirewallHealth
-- [x] NetworkRuleHit
-- [x] SNATPortUtilization
-- [x] CPU monitoring
-- [x] Memory monitoring
-- [x] Network monitoring
-- [x] Disk monitoring
-
-- [x] Create Azure Monitor Alerts for:
-
-Alerts:
-
-- [x] VMSS CPU Percentage > 80%
-- [x] VMSS Instances less than 2 (if there are less than 2 instances, send alert, severity 1)
-
----
-
-### Phase 9 - DevOps / CI-CD 🚧
-
-- [x] Create GitHub Actions folder
-- [ongoing] Create GitHub Actions Secrets (Variables)
-- [ongoing] Create Terraform plan
-- [ ] Create Terraform apply automatically
-- [ ] Create Terraform destroy
-
----
-
-## Project Complete
-
-Completed:
-
-✅ Terraform Bootstrap  
-✅ Remote State Backend  
-✅ Hub & Spoke Networking  
-✅ NSGs  
-✅ VM Scale Set  
-✅ Apache Deployment  
-✅ Azure Firewall  
-✅ Routing  
-✅ Azure Bastion  
-✅ Internal Load Balancer  
-✅ High Availability  
-✅ Monitoring  
-
+[Kamaal Bakar](https://www.linkedin.com/in/k-bakar/)
